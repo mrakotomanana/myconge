@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erreur <%= error.status %></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        h1 {
+            color: <%= error.status === 404 ? 'blue' : error.status === 403 ? 'orange' : 'red' %>;
+        }
+        .error-container {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f8f8;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>Erreur <%= error.status %></h1>
+        <p><%= message %></p>
+        <pre><%= error.stack %></pre>
+        <a href="/">Retour à l'accueil</a>
+    </div>
+</body>
+</html>
