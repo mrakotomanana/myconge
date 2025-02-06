@@ -1,0 +1,22 @@
+<% if (error_msg) { %>
+    <div class="alert alert-danger"><%= error_msg %></div>
+<% } %>
+
+<form action="/demande-conge" method="POST">
+    <label>Date de début :</label>
+    <input type="date" name="dateDebut" required>
+
+    <label>Date de fin :</label>
+    <input type="date" name="dateFin" required>
+
+    <label>Type de congé :</label>
+    <select name="type" required>
+        <option value="vacances">Vacances</option>
+        <option value="maladie">Maladie</option>
+    </select>
+
+    <label>Motif :</label>
+    <textarea name="motif" required></textarea>
+
+    <button type="submit">Soumettre</button>
+</form>

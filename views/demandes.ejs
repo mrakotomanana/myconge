@@ -1,0 +1,37 @@
+<%- include('layout') %>
+
+<h2>Liste des demandes de congés</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Employé</th>
+            <th>Date de début</th>
+            <th>Date de fin</th>
+            <th>Type</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% demandes.forEach(demande => { %>
+            <tr>
+                <td><%= demande.utilisateurId.nom %></td>
+                <td><%= demande.startDate.toDateString() %></td>
+                <td><%= demande.dueDate.toDateString() %></td>
+                <td><%= demande.type %></td>
+                <td><%= demande.statut %></td>
+                <td>
+                    <form action="/admin/demande/<%= demande._id %>" method="POST">
+                        <input type="hidden" name="_method" value="POST">
+                        <select name="statut" class="form-control">
+                            <option value="approuvé">Approuver</option>
+                            <option value="rejeté">Rejeter</option>
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-primary mt-2">Valider</button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>

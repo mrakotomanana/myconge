@@ -1,0 +1,54 @@
+<%- include('layout') %>
+
+    <h2>Bienvenue, <%= user.nom %> !</h2>
+    <p>Solde de congés : <strong>
+            <%= user.soldeConges %> jours
+        </strong></p>
+
+    <a href="/demande-conge" class="btn btn-success">Faire une demande de congé</a>
+
+    <h3 class="mt-4">Mes demandes de congé</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date de début</th>
+                <th>Date de fin</th>
+                <th>Type</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% demandes.forEach(demande=> { %>
+                <tr>
+                    <td>
+                        <%= demande.startDate.toDateString() %>
+                    </td>
+                    <td>
+                        <%= demande.dueDate.toDateString() %>
+                    </td>
+                    <td>
+                        <%= demande.type %>
+                    </td>
+                    <td>
+                        <%= demande.statut %>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+
+    <h1>Calendrier des Congés</h1>
+
+    <div id="calendar"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let calendarEl = document.getElementById('calendar');
+            let calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: '/api/conges', // Chargement des événements depuis le backend
+                locale: 'fr'
+            });
+            calendar.render();
+        });
+    </script>

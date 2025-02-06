@@ -1,0 +1,27 @@
+<%- include('layout') %>
+
+<h2>Nouvelle demande de congé</h2>
+
+<form action="/demande-conge" method="POST">
+    <div class="form-group">
+        <label>Date de début</label>
+        <input type="date" class="form-control" name="startDate" required>
+    </div>
+    <div class="form-group">
+        <label>Date de fin</label>
+        <input type="date" class="form-control" name="dueDate" required>
+    </div>
+    <div class="form-group">
+        <label>Type de congé</label>
+        <select class="form-control" name="type">
+            <option value="congé payé">Congé payé</option>
+            <option value="maladie">Maladie</option>
+            <option value="sans solde">Sans solde</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Motif</label>
+        <textarea class="form-control" name="motif"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Envoyer</button>
+</form>
