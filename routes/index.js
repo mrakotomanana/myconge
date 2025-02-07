@@ -9,7 +9,6 @@ function isAuthentificated(req, res, next){
   }
 }
 
-/* GET home page. */
 router.get('/', isAuthentificated, function(req, res, next) { 
   console.log("eto zao 4");
 
