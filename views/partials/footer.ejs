@@ -1,0 +1,18 @@
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            let alerts = document.querySelectorAll(".alert");
+            alerts.forEach(alert => {
+                alert.style.transition = "opacity 0.5s ease-out";
+                alert.style.opacity = "0";
+                setTimeout(() => alert.remove(), 500); // Supprime du DOM après disparition
+            });
+        }, 5000); // Temps avant disparition
+    });
+
+</script>
+</body>
+
+</html>

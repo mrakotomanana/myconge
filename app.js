@@ -5,24 +5,19 @@ var cookieParser = require('cookie-parser');
 var morgan = require('morgan');
 const helmet = require('helmet');
 const flash = require('connect-flash');
+const crypto = require("crypto");
+const cookie = require('cookie-parser');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const loginRouter = require('./routes/login');
+const session = require('express-session');
 
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.use(flash());
-
-// Middleware pour rendre les messages accessibles dans toutes les vues
-app.use((req, res, next) => {
-  res.locals.success_msg = req.flash('success_msg');
-  res.locals.error_msg = req.flash('error_msg');
-  next();
-});
 
 app.use(morgan('dev'));
 app.use(express.json());
@@ -30,9 +25,41 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+const dataSecret = process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex');
+
+app.use(session({
+  secret: dataSecret,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
+
+app.use(flash());
+
+
+
+// Middleware pour rendre les messages accessibles dans toutes les vues
+app.use((req, res, next) => {
+  const flashMessage = req.flash('success_msg');
+  const cookieMessage = req.cookies.success_msg ? [req.cookies.success_msg] : [];
+  res.locals.success_msg = [...flashMessage, ...cookieMessage];
+  res.locals.error_msg = req.flash('error_msg');
+  res.clearCookie('success_msg');
+  res.locals.user = req.session ? req.session.user : null;
+  res.locals.isConnected = req.session && req.session.user ? true : false; 
+  next();
+});
+
 app.use('/', indexRouter);
-app.use('/', loginRouter);
+app.use('/login', loginRouter);
 app.use('/users', usersRouter);
+
+app.get('/logout', (req, res) => {
+  res.cookie("success_msg", "Vous êtes déconnecté !", { maxAge: 5000, httpOnly: true });
+  req.session.destroy(() => {
+    res.redirect('/login');
+  });
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -41,13 +68,11 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   console.log("Error :: " + err.message);
 
-  // render the error page
   res.status(err.status || 500);
   res.render('error');
 });

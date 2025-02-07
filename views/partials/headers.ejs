@@ -11,19 +11,22 @@
 <body>
     <nav class="navbar navbar-dark bg-dark">
         <a class="navbar-brand" href="/dashboard">Gestion des Congés</a>
-        <% if (user) { %>
+        <% if (isConnected) { %>
             <a class="btn btn-danger" href="/logout">Déconnexion</a>
+        <% } else { %>
+                <a class="btn btn-primary" href="/login">Connexion</a>
         <% } %>
     </nav>
 
     <div class="container mt-4">
-        <% if (success_msg) { %>
+        <%
+            if (success_msg.length > 0) {           
+        %>
             <div class="alert alert-success"><%= success_msg %></div>
         <% } %>
-        <% if (error_msg) { %>
+        <% if (error_msg.length > 0) { %>
             <div class="alert alert-danger"><%= error_msg %></div>
         <% } %>
-        <%- body %>
     </div>
-</body>
-</html>
+    <div class="container mt-4">
+
