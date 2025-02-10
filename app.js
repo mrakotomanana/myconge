@@ -11,6 +11,9 @@ const cookie = require('cookie-parser');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const loginRouter = require('./routes/login');
+const registerRouter = require('./routes/register');
+const dashboardRouter = require('./routes/dashboard');
+
 const session = require('express-session');
 
 var app = express();
@@ -40,10 +43,12 @@ app.use(flash());
 
 // Middleware pour rendre les messages accessibles dans toutes les vues
 app.use((req, res, next) => {
-  const flashMessage = req.flash('success_msg');
-  const cookieMessage = req.cookies.success_msg ? [req.cookies.success_msg] : [];
-  res.locals.success_msg = [...flashMessage, ...cookieMessage];
-  res.locals.error_msg = req.flash('error_msg');
+  const flashSuccessMessage = req.flash('success_msg');
+  const cookieSuccessMessage = req.cookies.success_msg ? [req.cookies.success_msg] : [];
+  res.locals.success_msg = [...flashSuccessMessage, ...cookieSuccessMessage];
+  const flashErrorMessage = req.flash('error_msg');
+  const cookieErrorMessage = req.cookies.error_msg ? [req.cookies.error_msg] : [];
+  res.locals.error_msg = [...flashErrorMessage, ...cookieErrorMessage];
   res.clearCookie('success_msg');
   res.locals.user = req.session ? req.session.user : null;
   res.locals.isConnected = req.session && req.session.user ? true : false; 
@@ -53,9 +58,11 @@ app.use((req, res, next) => {
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/users', usersRouter);
+app.use('/register', registerRouter);
+app.use('/dashboard', dashboardRouter);
 
 app.get('/logout', (req, res) => {
-  res.cookie("success_msg", "Vous êtes déconnecté !", { maxAge: 5000, httpOnly: true });
+  res.cookie("error_msg", "Vous êtes déconnecté !", { maxAge: 5000, httpOnly: true });
   req.session.destroy(() => {
     res.redirect('/login');
   });
