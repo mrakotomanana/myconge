@@ -11,11 +11,11 @@ const cookie = require('cookie-parser');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const loginRouter = require('./routes/login');
+
 const session = require('express-session');
 
 var app = express();
 
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -36,9 +36,6 @@ app.use(session({
 
 app.use(flash());
 
-
-
-// Middleware pour rendre les messages accessibles dans toutes les vues
 app.use((req, res, next) => {
   const flashMessage = req.flash('success_msg');
   const cookieMessage = req.cookies.success_msg ? [req.cookies.success_msg] : [];
@@ -61,12 +58,12 @@ app.get('/logout', (req, res) => {
   });
 });
 
-// catch 404 and forward to error handler
+
 app.use(function(req, res, next) {
   next(createError(404, 'Not found.'));
 });
 
-// error handler
+
 app.use(function(err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
